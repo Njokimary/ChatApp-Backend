@@ -10,6 +10,10 @@ class Message(db.Model):
     user_id = db.Column(db.Integer)
     timestamp = db.Column(db.String(20))
     message_body = db.Column(db.Text)
+
+# Create database tables
+db.create_all()
+
     
 if __name__ == '__main__':
     db.create_all()
