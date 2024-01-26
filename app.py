@@ -34,5 +34,21 @@ def get_messages():
         })
     return jsonify(result)
 
+# Route to post a message
+@app.route('/messages', methods=['POST'])
+def post_message():
+    data = request.json  
+
+    user_id = data.get('user_id')
+    timestamp = datetime.utcnow()  
+    body = data.get('body')
+
+    new_message = Message(user_id=user_id, timestamp=timestamp, body=body)
+
+    db.session.add(new_message)
+    db.session.commit()
+
+    return jsonify({'message': 'Message posted successfully'})
+
 if __name__ == '__main__':
     create_app().run(debug=True)
