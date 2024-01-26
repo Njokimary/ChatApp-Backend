@@ -20,7 +20,19 @@ def create_app():
         db.create_all()
         return app
 
-
+# Route to get all messages
+@app.route('/messages', methods=['GET'])
+def get_messages():
+    messages = Message.query.all()
+    result = []
+    for message in messages:
+        result.append({
+            'id': message.id,
+            'user_id': message.user_id,
+            'timestamp': message.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+            'body': message.body
+        })
+    return jsonify(result)
 
 if __name__ == '__main__':
     create_app().run(debug=True)
