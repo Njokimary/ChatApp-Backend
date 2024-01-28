@@ -1,0 +1,171 @@
+{% extends 'base.html' %} 
+{% block content %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        background-color: #f5f5f5;
+    }
+
+    #room-container {
+        text-align: center;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        max-width: 800px;
+        margin: 50px auto;
+        box-sizing: border-box;
+    }
+
+    #home-header {
+        font-size: 2.5em;
+        color: #3498db; 
+        margin-bottom: 20px;
+    }
+
+    #room-subsection {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    #room-code-display {
+        font-size: 1.2em;
+        color: #333;
+    }
+
+    #leave-chat-btn {
+        color: #e74c3c; 
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 1.1em;
+        border-bottom: 2px solid #e74c3c;
+        transition: color 0.3s;
+    }
+
+    #leave-chat-btn:hover {
+        color: #c0392b; 
+    }
+
+    #chat-room-widget {
+        background-color: #ecf0f1; 
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #msgs-container {
+        max-height: 300px;
+        overflow-y: auto;
+        margin-bottom: 15px;
+    }
+
+    .message-item {
+        list-style-type: none;
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    .self-message-item {
+        background-color: #3498db; 
+        color: #fff;
+        align-self: flex-end;
+    }
+
+    .peer-message-item {
+        background-color: #fff;
+        color: #333;
+        align-self: flex-start;
+    }
+
+    .muted-text {
+        color: #555;
+        font-size: 0.9em;
+    }
+
+    .muted-text-white {
+        color: #fff;
+        font-size: 0.9em;
+    }
+
+    #message-box {
+        display: flex;
+        align-items: center;
+    }
+
+    #message-input {
+        flex-grow: 1;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-right: 10px;
+        box-sizing: border-box;
+    }
+
+    #send-btn {
+        background-color: #4CAF50;
+        color: #fff;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: background-color 0.3s;
+    }
+
+    #send-btn:hover {
+        background-color: #45a049;
+    }
+</style>
+
+<div id="room-container">
+    <h1 id="home-header">Branch 💬</h1>
+    <div id="room-subsection">
+        <h2 id="room-code-display">Room Code: <span>{{room}}</span></h2>
+        <a href="/" id="leave-chat-btn">Leave the Chat</a>
+    </div>
+    <div id="chat-room-widget">
+        <div id="msgs-container">
+            <ul id="messages"></ul>
+        </div>
+        <div id="message-box">
+            <input type="text" placeholder="Enter your message" id="message-input" name="message" />
+            <button type="submit" id="send-btn" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var socketio = io();
+        socketio.on("message", function (message) { createChatItem(message.message, message.sender) });
+        function createChatItem(message, sender) {
+            var messages = document.getElementById("messages");
+            if (sender === "") {
+                content = `<p class="member-activity">${message}</p>`;
+            } else {
+                var senderIsUser = "{{user}}" === sender;
+                var content = `
+                    <li class="message-item ${senderIsUser ? "self-message-item" : "peer-message-item"}">
+                        <p>${message}</p>
+                        <small class="${senderIsUser ? "muted-text" : "muted-text-white"}">${new Date().toLocaleString()}</small>
+                    </li>
+                `;
+            }
+            messages.innerHTML += content;
+        }
+        function sendMessage() {
+            var msgInput = document.getElementById("message-input");
+            if (msgInput.value === "") return;
+            var msg = msgInput.value;
+            socketio.emit("message", { message: msg });
+            msgInput.value = "";
+        }
+    </script>
+    {% for message in messages %}
+    <script type="text/javascript">
+        createChatItem("{{message.message}}", "{{message.sender}}");
+    </script>
+    {% endfor %}
+</div>
+{% endblock %}
