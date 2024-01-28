@@ -1,0 +1,116 @@
+
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+
+#root {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+}
+
+
+#home-container,
+#room-container {
+    text-align: center;
+    margin-top: 50px;
+}
+
+
+#home-header,
+#room-code-display {
+    color: #333;
+}
+
+
+#leave-chat-btn {
+    display: block;
+    margin-top: 10px;
+    color: #007BFF;
+    text-decoration: none;
+}
+
+
+#chat-widget-home {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#name-input,
+#code-label {
+    margin-bottom: 10px;
+}
+
+#error {
+    color: #FF0000;
+}
+
+
+#msgs-container {
+    max-height: 300px;
+    overflow-y: scroll;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+
+.message-item {
+    list-style: none;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.self-message-item {
+    background-color: #007BFF;
+    color: #fff;
+    text-align: right;
+}
+
+.peer-message-item {
+    background-color: #eee;
+}
+
+
+.muted-text,
+.muted-text-white {
+    color: #777;
+    font-size: 12px;
+}
+
+
+.muted-text-white {
+    color: #fff;
+}
+
+
+#message-box {
+    display: flex;
+}
+
+#message-input {
+    flex-grow: 1;
+    padding: 5px;
+}
+
+
+#send-btn {
+    padding: 5px 10px;
+    margin-left: 5px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+
+#send-btn:disabled {
+    background-color: #ccc;
+    color: #333;
+    cursor: not-allowed;
+}
